@@ -1,0 +1,12 @@
+{
+    "ResourceFilters":
+    {
+        "SlotTypes":["FlowerType","PickupDate","PickupTime"],
+        "Intents":["OrderFlowers"],
+        "Bots":["OrderFlowers"]
+    },
+    "Output":{
+        "Filename": "order-flowers-template.json",
+        "TemplateDescription":"Creates resources needed for the OrderFlowers Sample "
+    }
+}  

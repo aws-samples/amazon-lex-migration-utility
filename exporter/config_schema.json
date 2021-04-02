@@ -1,0 +1,62 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "ResourceFilters": {
+        "type": "object",
+        "properties": {
+          "SlotTypes": {
+            "type": "array",
+            "items": [
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "Intents": {
+            "type": "array",
+            "items": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "Bots": {
+            "type": "array",
+            "items": [
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "SlotTypes",
+          "Intents",
+          "Bots"
+        ]
+      },
+      "Output": {
+        "type": "object",
+        "properties": {
+          "Filename": {
+            "type": "string"
+          },
+          "TemplateDescription": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "Filename",
+          "TemplateDescription"
+        ]
+      }
+    },
+    "required": [
+      "ResourceFilters",
+      "Output"
+    ]
+}

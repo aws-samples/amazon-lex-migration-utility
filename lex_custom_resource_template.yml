@@ -1,0 +1,82 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: CLoudformation custom resource to deploy Lex
+
+Resources:  
+  LexBotCustomResource:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: LexBotCustomResource
+      Handler: index.handler
+      Runtime: nodejs12.x
+      CodeUri: ./custom-resources/lex-bot
+      Description: 'custom cloudformation resource used to deploy Lexbots'
+      MemorySize: 256
+      Timeout: 300
+      Policies:
+        - Statement: 
+          - Sid: Lex
+            Effect: "Allow"
+            Action: 
+            - lex:DeleteIntent
+            - lex:CreateIntent
+            - lex:PutIntent
+            - lex:DeleteBot
+            - lex:PutBot
+            Resource: "*"
+  LexIntentCustomResource:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: LexIntentCustomResource
+      Handler: index.handler
+      Runtime: nodejs12.x
+      CodeUri: ./custom-resources/lex-intent
+
+      Description: 'custom cloudformation resource used to deploy Lexbots'
+      MemorySize: 256
+      Timeout: 300
+      Policies:
+        - Statement: 
+          - Sid: Lex
+            Effect: "Allow"
+            Action: 
+            - lex:DeleteIntent
+            - lex:CreateIntent
+            - lex:PutIntent
+            Resource: "*"
+  LexSlotCustomResource:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: LexSlotCustomResource
+      Handler: index.handler
+      Runtime: nodejs12.x
+      CodeUri: ./custom-resources/lex-slot
+      Description: 'custom cloudformation resource used to deploy Lexbots'
+      MemorySize: 256
+      Timeout: 300
+      Policies:
+        - Statement: 
+          - Sid: Lex
+            Effect: "Allow"
+            Action: 
+            - lex:DeleteSlotType
+            - lex:CreateSlotType
+            - lex:PutSlotType
+            Resource: "*"
+            
+Outputs:
+  CFNIntentLex:
+    Description: Custom resource to deploy LexBots
+    Value: !GetAtt LexIntentCustomResource.Arn
+    Export: 
+      Name: LexIntentCustomResource
+  CFNBotLex:
+    Description: Custom resource to deploy LexBots
+    Value: !GetAtt LexBotCustomResource.Arn
+    Export: 
+      Name: LexBotCustomResource
+  CFNSlotLex:
+    Description: Custom resource to deploy LexBots
+    Value: !GetAtt LexSlotCustomResource.Arn
+    Export: 
+      Name: LexSlotCustomResource
