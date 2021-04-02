@@ -86,4 +86,4 @@ python create_lex_template.py' --config-file *configuration_file*  --profile *so
 
 ## Acknowledgements
 
-The custom resources used by **Lex Migrator** are a slightly modified forks of work done by [Andrew Templeton](https://github.com/andrew-templeton)
+The custom resources used by **Lex Migrator** are slightly modified forks of work done by [Andrew Templeton](https://github.com/andrew-templeton)
