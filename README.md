@@ -40,6 +40,7 @@ sam deploy --template-file custom-resources-sam-template.yml  --stack-name lex-c
 ```
 
 `ResourceFilters` allow you to choose which bots, intents, and slots get exported.  Any resources that contain  the specified values as part of their name will be exported.
+
 `Output`
 
 &nbsp;&nbsp;&nbsp;&nbsp;`Filename` the name of the exported template
