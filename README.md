@@ -77,11 +77,13 @@ python create_lex_template.py' --config-file *configuration_file*  --profile *so
 
 ### Deploy to the destination account
 
-```sam deploy --template-file *output_template* --stack-name *stack name* --resolve-s3 --capabilities "CAPABILITY_NAMED_IAM"```
+```
+sam deploy --template-file *output_template* --stack-name *stack name* --resolve-s3 --capabilities "CAPABILITY_NAMED_IAM"
+```
 
 ## Known Issues
 
-- Deleting a stack with custom Lex resources does not always delete cleanly. If the custom resource returns a "Conflict Exception". Keep trying to delte the stack.
+- Deleting a stack with custom Lex resources does not always delete cleanly. If the custom resource returns a "Conflict Exception". Keep trying to delete the stack.
 - Occasionally, some resources are not deleted successfully although CloudFormation will report success.
 
 ## Acknowledgements
