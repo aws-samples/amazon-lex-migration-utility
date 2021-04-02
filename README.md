@@ -1,6 +1,7 @@
 # Lex-Migrator
 
 ## Purpose
+
 Lex Migrator is a utility to migrate [Amazon LexBots](https://aws.amazon.com/lex/), between accounts.
 
 The Lex Migrator consists of a Python script that exports Lex definitions to an [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template and three [custom resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html) to create [bots](https://github.com/andrew-templeton/cfn-lex-bot), [Intents](https://github.com/andrew-templeton/cfn-lex-intent), and [slots](https://github.com/andrew-templeton/cfn-lex-slot-type)
@@ -51,7 +52,7 @@ sam deploy --template-file custom-resources-sam-template.yml  --stack-name lex-c
 
 Lex Migrator requires [Python 3.x](https://www.python.org/downloads/)
 
-##### Configure the AWS CLI with a profile for the source account.
+##### Configure the AWS CLI with a profile for the source account
 
 The easiest method to export the definition is to create a [named profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) for the *source_account*:
 
@@ -71,7 +72,6 @@ Then from the destination account:
 python create_lex_template.py' --config-file *configuration_file*  --profile *source account*
 ```
 
-
 ### Deploy to the destination account
 
 ```sam deploy --template-file *output_template* --stack-name *stack name* --resolve-s3 --capabilities "CAPABILITY_NAMED_IAM"```
@@ -84,4 +84,3 @@ python create_lex_template.py' --config-file *configuration_file*  --profile *so
 ## Acknowledgements
 
 The custom resources used by **Lex Migrator** are a slightly modified forks of work done by [Andrew Templeton](https://github.com/andrew-templeton)
-
