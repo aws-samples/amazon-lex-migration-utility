@@ -72,13 +72,13 @@ pip install --requirements requirements.txt #installs dependencies.  This only n
 Then from the destination account:
 
 ```bash
-python create_lex_template.py' --config-file *configuration_file*  --profile *source account*
+python create_lex_template.py' --config-file <configuration file>  --profile <source account>
 ```
 
 ### Deploy to the destination account
 
 ```
-sam deploy --template-file *output_template* --stack-name *stack name* --resolve-s3 --capabilities "CAPABILITY_NAMED_IAM"
+sam deploy --template-file <utput template> --stack-name <stack name> --resolve-s3 --capabilities "CAPABILITY_NAMED_IAM"
 ```
 
 ## Known Issues
