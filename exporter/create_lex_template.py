@@ -100,7 +100,7 @@ with open("./config_schema.json","r") as file:
 try:
     jsonschema.validate(instance=config,schema = schema )
 except:
-    print(f"{sys.argv[2]} is not valid config file.")
+    print(f"{config_file} is not valid config file.")
     sys.exit(show_help(True))
 
 
