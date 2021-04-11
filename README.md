@@ -1,8 +1,8 @@
-# AWS Lex Migration Utilty
+# Amazon Lex Migration Utility
 
 ## Purpose
 
-The AWS Lex Migration Utilty let's you easily migrate  [Amazon Lex Chatbots](https://aws.amazon.com/lex/) between accounts.
+The Amazon Lex Migration Utility allows you to easily migrate  [Amazon Lex Chatbots](https://aws.amazon.com/lex/) between accounts.
 
 The Lex Migration Utility consists of a Python script that exports Lex definitions to an [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template and three [custom resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html) to create [bots](https://github.com/andrew-templeton/cfn-lex-bot), [Intents](https://github.com/andrew-templeton/cfn-lex-intent), and [slots](https://github.com/andrew-templeton/cfn-lex-slot-type)
 
@@ -53,7 +53,7 @@ sam deploy --template-file custom-resources-sam-template.yml  --stack-name lex-c
 
 ##### Python 3.x
 
-The Lex Migration utilty requires [Python 3.x](https://www.python.org/downloads/)
+The Amazon Lex Migration Utility requires [Python 3.x](https://www.python.org/downloads/)
 
 ##### Configure the AWS CLI with a profile for the source account
 
@@ -88,4 +88,4 @@ sam deploy --template-file <utput template> --stack-name <stack name> --resolve-
 
 ## Acknowledgements
 
-The custom resources used by the Lex Migration Utilty are slightly modified forks of work done by [Andrew Templeton](https://github.com/andrew-templeton)
+The custom resources used by the Lex Migration Utility are slightly modified forks of work done by [Andrew Templeton](https://github.com/andrew-templeton)
