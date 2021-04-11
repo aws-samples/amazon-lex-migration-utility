@@ -1,10 +1,10 @@
-# Lex-Migrator
+# AWS Lex Migration Utilty
 
 ## Purpose
 
-Lex Migrator is a utility to migrate [Amazon LexBots](https://aws.amazon.com/lex/), between accounts.
+The AWS Lex Migration Utilty let's you easily migrate  [Amazon Lex Chatbots](https://aws.amazon.com/lex/) between accounts.
 
-The Lex Migrator consists of a Python script that exports Lex definitions to an [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template and three [custom resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html) to create [bots](https://github.com/andrew-templeton/cfn-lex-bot), [Intents](https://github.com/andrew-templeton/cfn-lex-intent), and [slots](https://github.com/andrew-templeton/cfn-lex-slot-type)
+The Lex Migration Utility consists of a Python script that exports Lex definitions to an [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template and three [custom resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html) to create [bots](https://github.com/andrew-templeton/cfn-lex-bot), [Intents](https://github.com/andrew-templeton/cfn-lex-intent), and [slots](https://github.com/andrew-templeton/cfn-lex-slot-type)
 
 ## Installation
 
@@ -39,7 +39,7 @@ sam deploy --template-file custom-resources-sam-template.yml  --stack-name lex-c
 }
 ```
 
-`ResourceFilters` allow you to choose which bots, intents, and slots get exported.  Any resources that contain  the specified values as part of their name will be exported.
+`ResourceFilters` allow you to choose which bots, intents, and slots get exported.  Any resources which contain the specified values as part of their name will be exported.
 
 `Output`
 
@@ -47,13 +47,13 @@ sam deploy --template-file custom-resources-sam-template.yml  --stack-name lex-c
 
 &nbsp;&nbsp;&nbsp;&nbsp;`TemplateDescription` Populates the `Description` field of the CloudFormation template
 
-### Export LexBot definitions from the soource account
+### Export Lex definitions from the source account
 
 #### Prerequisites
 
 ##### Python 3.x
 
-Lex Migrator requires [Python 3.x](https://www.python.org/downloads/)
+The Lex Migration utilty requires [Python 3.x](https://www.python.org/downloads/)
 
 ##### Configure the AWS CLI with a profile for the source account
 
@@ -77,7 +77,7 @@ python create_lex_template.py' --config-file <configuration file>  --profile <so
 
 ### Deploy to the destination account
 
-```
+```bash
 sam deploy --template-file <utput template> --stack-name <stack name> --resolve-s3 --capabilities "CAPABILITY_NAMED_IAM"
 ```
 
@@ -88,4 +88,4 @@ sam deploy --template-file <utput template> --stack-name <stack name> --resolve-
 
 ## Acknowledgements
 
-The custom resources used by **Lex Migrator** are slightly modified forks of work done by [Andrew Templeton](https://github.com/andrew-templeton)
+The custom resources used by the Lex Migration Utilty are slightly modified forks of work done by [Andrew Templeton](https://github.com/andrew-templeton)
