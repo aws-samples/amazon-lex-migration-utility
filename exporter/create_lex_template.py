@@ -69,15 +69,7 @@ def create_resource(resource_type,lex_list_function,lex_get_details_function,lex
 
 
 profile =None
-if len(sys.argv) == 1:
-    print (show_help())
-    sys.exit()
-if len(sys.argv) == 2 and  sys.argv[1] == "--help":
-    print (show_help())
-    sys.exit()
-if len(sys.argv) == 3 and sys.argv[1] != "--config-file":
-    print (show_help())
-    sys.exit()
+
 
 for i in range(len(sys.argv)):
     argv = sys.argv[i]
@@ -108,7 +100,7 @@ with open("./config_schema.json","r") as file:
 try:
     jsonschema.validate(instance=config,schema = schema )
 except:
-    print(f"{sys.argv[2]} is not valid config file.")
+    print(f"{config_file} is not valid config file.")
     sys.exit(show_help(True))
 
 

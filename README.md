@@ -59,7 +59,7 @@ The Amazon Lex Migration Utility requires [Python 3.x](https://www.python.org/do
 
 The easiest method to export the definition is to create a [named profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) for the *source_account*:
 
-`aws configure --profile source_account`
+`aws configure --profile <source_account>`
 
 ##### Install dependencies
 
@@ -72,7 +72,7 @@ pip install --requirements requirements.txt #installs dependencies.  This only n
 Then from the destination account:
 
 ```bash
-python create_lex_template.py' --config-file <configuration file>  --profile <source account>
+python create_lex_template.py --config-file <configuration file>  --profile <source account>
 ```
 
 ### Deploy to the destination account
