@@ -12,7 +12,7 @@ The Lex Migration Utility consists of a Python script that exports Lex definitio
 
 [Getting started with AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-getting-started.html)
 
-### Install CloudFormation custom resources in the target account
+### Install AWS CloudFormation custom resources in the target account
 
 ``` bash
 sam build -t lex_custom_resource_template.yml  
@@ -88,4 +88,4 @@ sam deploy --template-file <utput template> --stack-name <stack name> --resolve-
 
 ## Acknowledgements
 
-The custom resources used by the Lex Migration Utility are slightly modified forks of work done by [Andrew Templeton](https://github.com/andrew-templeton)
+The custom resources used by the Amazon Lex Migration Utility are slightly modified forks of work done by [Andrew Templeton](https://github.com/andrew-templeton)
