@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Amazon Lex Migration Utility allows you to easily migrate  [Amazon Lex Chatbots](https://aws.amazon.com/lex/) between accounts.
+The Amazon Lex Migration Utility allows you to easily migrate [Amazon Lex Chatbots](https://aws.amazon.com/lex/) between accounts.
 
 The Lex Migration Utility consists of a Python script that exports Lex definitions to an [AWS CloudFormation](https://aws.amazon.com/cloudformation/) template and three [custom resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html) to create [bots](https://github.com/andrew-templeton/cfn-lex-bot), [Intents](https://github.com/andrew-templeton/cfn-lex-intent), and [slots](https://github.com/andrew-templeton/cfn-lex-slot-type)
 

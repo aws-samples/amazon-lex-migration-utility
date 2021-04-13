@@ -14,7 +14,7 @@ def show_help(short = True):
     if short:
         return command_line
     else:
-        with open("./example-configuration.json") as file:
+        with open("./exporter/example-configuration.json") as file:
             config_example = file.read()
         return (command_line + "\n\n"
         "Configuration file format \n"
@@ -40,7 +40,6 @@ def create_resource(resource_type,lex_list_function,lex_get_details_function,lex
         'StartingToken': marker
     })
 
-    #lex_type_list = response[lex_type]
     created_resources = []
     for type in iterator:
         types = type[lex_type]
@@ -94,7 +93,7 @@ else:
 print(sys.argv[2])
 with open(sys.argv[2],"r") as file:
     config = json.load(file)
-with open("./config_schema.json","r") as file:
+with open("./exporter/config_schema.json","r") as file:
     schema = json.load(file)
 
 try:
