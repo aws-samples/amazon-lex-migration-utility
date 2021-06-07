@@ -103,21 +103,33 @@ Resources:
 Outputs:
   CFNIntentLex:
     Description: Custom resource to deploy LexBots
-    Value: !GetAtt LexIntentCustomResource.Arn
-    Export: 
+    Value:
+      Fn::GetAtt:
+      - LexIntentCustomResource
+      - Arn
+    Export:
       Name: LexIntentCustomResource
   CFNBotLex:
     Description: Custom resource to deploy LexBots
-    Value: !GetAtt LexBotCustomResource.Arn
-    Export: 
-      Name: LexBotCustomResource
-  CFNBotLexAlias:
-    Description: Custom resource to deploy LexBots
-    Value: !GetAtt LexBotCustomResource.Arn
-    Export: 
+    Value:
+      Fn::GetAtt:
+      - LexBotCustomResource
+      - Arn
+    Export:
       Name: LexBotCustomResource
   CFNSlotLex:
     Description: Custom resource to deploy LexBots
-    Value: !GetAtt LexAliasCustomResource.Arn
-    Export: 
+    Value:
+      Fn::GetAtt:
+      - LexSlotCustomResource
+      - Arn
+    Export:
+      Name: LexSlotCustomResource
+  CFNBotLexAlias:
+    Description: Custom resource to deploy LexBots
+    Value:
+      Fn::GetAtt:
+      - LexAliasCustomResource
+      - Arn
+    Export:
       Name: LexBotAliasCustomResource
