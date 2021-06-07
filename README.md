@@ -72,7 +72,7 @@ pip install --requirements requirements.txt #installs dependencies.  This only n
 Then from the destination account:
 
 ```bash
-python ./exporter/create_lex_template.py --config-file <configuration file>  --profile <source account>
+python3 ./exporter/create_lex_template.py --config-file <configuration file>  --profile <source account>
 ```
 
 ### Deploy to the destination account

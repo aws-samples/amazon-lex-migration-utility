@@ -1,12 +1,12 @@
 """
   Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  
+
   Licensed under the Apache License, Version 2.0 (the "License").
   You may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
       http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import sys
 
 
 def show_help(short=True):
-    command_line = f"{sys.argv[0]} --config-file config_file  [--help] "
+    command_line = f"{sys.argv[0]} --config-file config_file  [--help]"
     if short:
         return command_line
     else:
@@ -45,6 +45,34 @@ def get_latest_intent(intent_name):
             if intent["version"] != "$LATEST" and int(intent["version"]) > max_version:
                 max_version = int(intent["version"])
     return max_version
+
+
+def create_lex_bot_aliases(resource_type,
+                           name_contains,
+                           service_token,
+                           alias):
+    paginator = client.get_paginator('get_bots')
+    marker = None
+    pages = paginator.paginate(nameContains=name_contains, PaginationConfig={
+        'MaxItems': 1000,
+        'PageSize': 10,
+        'StartingToken': marker
+    })
+    for page in pages:
+        for bot in page["bots"]:
+            print(bot)
+            bot_resource_name = re.sub(r'[\W_]+', '', bot["name"])
+            template["Resources"].update(
+                    {bot_resource_name + "Alias": {
+                        "Type": resource_type,
+                        "DependsOn": [bot_resource_name],
+                        "Properties": {
+                            "ServiceToken": {"Fn::ImportValue": service_token},
+                            "name": alias,
+                            "botVersion": "$LATEST",
+                            "botName": bot["name"]
+                        }
+                    }})
 
 
 def create_resource(resource_type,
@@ -150,6 +178,7 @@ for prefixes in config["ResourceFilters"]["Intents"]:
 
 
 paginator = client.get_paginator('get_bots')
+alias = config["Build"]["LexAlias"]
 for prefixes in config["ResourceFilters"]["Bots"]:
     bots = create_resource("Custom::LexBot",
                            paginator.paginate,
@@ -158,13 +187,17 @@ for prefixes in config["ResourceFilters"]["Bots"]:
                            "LexBotCustomResource",
                            prefixes,
                            resources)
+
+    create_lex_bot_aliases("Custom::LexBotAlias",
+                           prefixes,
+                           "LexBotAliasCustomResource",
+                           alias)
     resources += bots
 
 for bot in bots:
     intents = template["Resources"][bot]["Properties"]["intents"]
     for intent in intents:
         intent["intentVersion"] = 1
-
 
 with open(config["Output"]["Filename"], 'w') as f:
     json.dump(template, f, indent=4, default=str)

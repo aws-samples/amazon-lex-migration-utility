@@ -1,4 +1,8 @@
 {
+    "Build":
+    {
+        "LexAlias":"live"
+    },
     "ResourceFilters":
     {
         "SlotTypes":["FlowerType","PickupDate","PickupTime"],
