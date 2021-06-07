@@ -77,6 +77,28 @@ Resources:
             - lex:CreateSlotType
             - lex:PutSlotType
             Resource: "*"
+
+  LexAliasCustomResource:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: LexAliasCustomResource
+      Handler: index.handler
+      Runtime: nodejs12.x
+      CodeUri: ./custom-resources/lex-alias
+      Description: 'custom cloudformation resource used to deploy Lex aliases'
+      MemorySize: 256
+      Timeout: 300
+      Policies:
+        - Statement: 
+          - Sid: Lex
+            Effect: "Allow"
+            Action: 
+            - lex:GetBotAliases
+            - lex:GetBotAlias
+            - lex:PutBotAlias
+            - lex:DeleteBotAlias
+            Resource: "*"
+            
             
 Outputs:
   CFNIntentLex:
