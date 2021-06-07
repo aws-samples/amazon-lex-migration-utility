@@ -111,8 +111,13 @@ Outputs:
     Value: !GetAtt LexBotCustomResource.Arn
     Export: 
       Name: LexBotCustomResource
+  CFNBotLexAlias:
+    Description: Custom resource to deploy LexBots
+    Value: !GetAtt LexBotCustomResource.Arn
+    Export: 
+      Name: LexBotCustomResource
   CFNSlotLex:
     Description: Custom resource to deploy LexBots
-    Value: !GetAtt LexSlotCustomResource.Arn
+    Value: !GetAtt LexAliasCustomResource.Arn
     Export: 
-      Name: LexSlotCustomResource
+      Name: LexBotAliasCustomResource
