@@ -1,7 +1,8 @@
 {
     "Build":
     {
-        "LexAlias":"live"
+        "LexAlias":"live",
+        "CreateConnectPermissions":true
     },
     "ResourceFilters":
     {

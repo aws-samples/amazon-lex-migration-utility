@@ -72,7 +72,7 @@ const Update = function (RequestPhysicalID, CfnRequestParams, OldCfnRequestParam
 const Delete = CfnLambda.SDKAlias({
   api: LexModelBuildingService,
   method: 'deleteBotAlias',
-  keys: ['name'],
+  keys: ['botName','name'],
   ignoreErrorCodes: [404]
 })
 

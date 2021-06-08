@@ -20,6 +20,7 @@ from functools import reduce, partial
 import re
 import json
 import sys
+import os
 
 # TODO: Handle version updates
 
@@ -199,5 +200,6 @@ for bot in bots:
     for intent in intents:
         intent["intentVersion"] = 1
 
-with open(config["Output"]["Filename"], 'w') as f:
+
+with open(os.path.join(sys.path[0], config["Output"]["Filename"]), 'w') as f:
     json.dump(template, f, indent=4, default=str)
