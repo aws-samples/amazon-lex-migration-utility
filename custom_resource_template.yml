@@ -98,11 +98,64 @@ Resources:
             - lex:PutBotAlias
             - lex:DeleteBotAlias
             Resource: "*"
+
+  DDBAddItemCustomResource:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DDBAddItemCustomResource
+      Handler: index.handler
+      Runtime: nodejs12.x
+      CodeUri: ./custom-resources/dynamodb-item
+      Description: 'custom cloudformation resource used to deploy Lex aliases'
+      MemorySize: 256
+      Timeout: 300
+      Policies:
+        - Statement: 
+          - Sid: DynampDB
+            Effect: "Allow"
+            Action: 
+            - dynamodb:PutItem
+            Resource: "arn:aws:dynamodb:*:${AWS::AccountID}:table/*"   
             
+  LambdaConnectPermissionCustomResource:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DDBAddItemCustomResource
+      Handler: index.handler
+      Runtime: nodejs12.x
+      CodeUri: ./custom-resources/create-connect-lambda-permission
+      Description: 'custom cloudformation resource used to associate a Lambda with a Connect instance'
+      MemorySize: 256
+      Timeout: 300
+      Policies:
+        - Statement: 
+          - Sid: DynamoDB
+            Effect: "Allow"
+            Action: 
+            - dynamodb:PutItem
+            Resource: "arn:aws:dynamodb:*:${AWS::AccountID}:table/*"      
+
+  LexConnectPermissionCustomResource:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: DDBAddItemCustomResource
+      Handler: index.handler
+      Runtime: nodejs12.x
+      CodeUri: ./custom-resources/create-connect-lex-permission
+      Description: 'custom cloudformation resource used to associate a Lex with a Connect instance'
+      MemorySize: 256
+      Timeout: 300
+      Policies:
+        - Statement: 
+          - Sid: DynamoDB
+            Effect: "Allow"
+            Action: 
+            - dynamodb:PutItem
+            Resource: "arn:aws:dynamodb:*:${AWS::AccountID}:table/*"  
             
 Outputs:
   CFNIntentLex:
-    Description: Custom resource to deploy LexBots
+    Description: Custom resource to deploy intents
     Value:
       Fn::GetAtt:
       - LexIntentCustomResource
@@ -110,7 +163,7 @@ Outputs:
     Export:
       Name: LexIntentCustomResource
   CFNBotLex:
-    Description: Custom resource to deploy LexBots
+    Description: Custom resource to deploy Amazon Lex Bots
     Value:
       Fn::GetAtt:
       - LexBotCustomResource
@@ -118,7 +171,7 @@ Outputs:
     Export:
       Name: LexBotCustomResource
   CFNSlotLex:
-    Description: Custom resource to deploy LexBots
+    Description: Custom resource to deploy slots
     Value:
       Fn::GetAtt:
       - LexSlotCustomResource
@@ -126,10 +179,34 @@ Outputs:
     Export:
       Name: LexSlotCustomResource
   CFNBotLexAlias:
-    Description: Custom resource to deploy LexBots
+    Description: Custom resource to deploy Lex bot aliases
     Value:
       Fn::GetAtt:
       - LexAliasCustomResource
       - Arn
     Export:
       Name: LexBotAliasCustomResource
+  CFNDDBAddItem:
+    Description: Custom resource to add DynamoDB items to an existing database
+    Value:
+      Fn::GetAtt:
+      - DDBAddItemCustomResource
+      - Arn
+    Export:
+      Name: DDBAddItemCustomResource
+  CFNLexConnectPermission:
+    Description: Custom resource to add DynamoDB items to an existing database
+    Value:
+      Fn::GetAtt:
+      - LexConnectPermissionCustomResource
+      - Arn
+    Export:
+      Name: LexConnectPermissionCustomResource
+  CFNLambdaConnectPermission:
+    Description: Custom resource to add DynamoDB items to an existing database
+    Value:
+      Fn::GetAtt:
+      - LambdaConnectPermissionCustomResource
+      - Arn
+    Export:
+      Name: LambdaConnectPermissionCustomResource

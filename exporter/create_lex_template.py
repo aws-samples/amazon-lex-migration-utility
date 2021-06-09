@@ -61,7 +61,6 @@ def create_lex_bot_aliases(resource_type,
     })
     for page in pages:
         for bot in page["bots"]:
-            print(bot)
             bot_resource_name = re.sub(r'[\W_]+', '', bot["name"])
             template["Resources"].update(
                     {bot_resource_name + "Alias": {
@@ -75,6 +74,33 @@ def create_lex_bot_aliases(resource_type,
                         }
                     }})
 
+
+def create_lex_bot_permissions(resource_type,
+                               name_contains,
+                               service_token,
+                               connect_instance_id):
+    paginator = client.get_paginator('get_bots')
+    marker = None
+    pages = paginator.paginate(nameContains=name_contains, PaginationConfig={
+        'MaxItems': 1000,
+        'PageSize': 10,
+        'StartingToken': marker
+    })
+    for page in pages:
+        for bot in page["bots"]:
+            print(bot)
+            bot_resource_name = re.sub(r'[\W_]+', '', bot["name"])
+            template["Resources"].update(
+                    {bot_resource_name + "Permission": {
+                        "Type": resource_type,
+                        "DependsOn": [bot_resource_name],
+                        "Properties": {
+                            "ServiceToken": {"Fn::ImportValue": service_token},
+                            "InstanceID": connect_instance_id,
+                            "LexRegion": {"Ref":"AWS::Region"},
+                            "Name": bot["name"]
+                        }
+                    }})
 
 def create_resource(resource_type,
                     lex_list_function,
@@ -193,6 +219,11 @@ for prefixes in config["ResourceFilters"]["Bots"]:
                            prefixes,
                            "LexBotAliasCustomResource",
                            alias)
+    if(config["build"]["CreateConnectPermissions"]):
+        create_lex_bot_permissions("Custom::LexBotAlias",
+                                   prefixes,
+                                   "LexConnectPermissionCustomResource",
+                                   config["Build"]["ConnectInstanceId"])
     resources += bots
 
 for bot in bots:
