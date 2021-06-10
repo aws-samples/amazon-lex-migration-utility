@@ -129,11 +129,12 @@ Resources:
       Timeout: 300
       Policies:
         - Statement: 
-          - Sid: DynamoDB
+          - Sid: Connect
             Effect: "Allow"
             Action: 
-            - dynamodb:PutItem
-            Resource: "arn:aws:dynamodb:*:${AWS::AccountID}:table/*"      
+            - "connect:AssociateLambdaFunction",
+            - "connect:DisassociateLambdaFunction"            
+            Resource: "arn:aws:connect:*:${AWS::AccountID}:instance/*"   
 
   LexConnectPermissionCustomResource:
     Type: 'AWS::Serverless::Function'
@@ -147,11 +148,12 @@ Resources:
       Timeout: 300
       Policies:
         - Statement: 
-          - Sid: DynamoDB
+          - Sid: Connect
             Effect: "Allow"
             Action: 
-            - dynamodb:PutItem
-            Resource: "arn:aws:dynamodb:*:${AWS::AccountID}:table/*"  
+            - "connect:AssociateLexBot",
+            - "connect:DisassociateLexBot",
+            Resource: "arn:aws:connect:*:${AWS::AccountID}:instance/*" 
             
 Outputs:
   CFNIntentLex:
