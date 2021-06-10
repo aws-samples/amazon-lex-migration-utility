@@ -132,7 +132,7 @@ Resources:
           - Sid: Connect
             Effect: "Allow"
             Action: 
-            - "connect:AssociateLambdaFunction",
+            - "connect:AssociateLambdaFunction"
             - "connect:DisassociateLambdaFunction"            
             Resource: "arn:aws:connect:*:${AWS::AccountID}:instance/*"   
 
@@ -151,8 +151,8 @@ Resources:
           - Sid: Connect
             Effect: "Allow"
             Action: 
-            - "connect:AssociateLexBot",
-            - "connect:DisassociateLexBot",
+            - "connect:AssociateLexBot"
+            - "connect:DisassociateLexBot"
             Resource: "arn:aws:connect:*:${AWS::AccountID}:instance/*" 
             
 Outputs:
