@@ -120,7 +120,7 @@ Resources:
   LambdaConnectPermissionCustomResource:
     Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: DDBAddItemCustomResource
+      FunctionName: LambdaConnectPermissionCustomResource
       Handler: index.handler
       Runtime: nodejs12.x
       CodeUri: ./custom-resources/create-connect-lambda-permission
@@ -139,7 +139,7 @@ Resources:
   LexConnectPermissionCustomResource:
     Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: DDBAddItemCustomResource
+      FunctionName: LexConnectPermissionCustomResource
       Handler: index.handler
       Runtime: nodejs12.x
       CodeUri: ./custom-resources/create-connect-lex-permission
