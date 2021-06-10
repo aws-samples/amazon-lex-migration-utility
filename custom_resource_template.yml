@@ -132,9 +132,9 @@ Resources:
           - Sid: Connect
             Effect: "Allow"
             Action: 
-            - "connect:AssociateLambdaFunction"
-            - "connect:DisassociateLambdaFunction"            
-            Resource: "arn:aws:connect:*:${AWS::AccountID}:instance/*"   
+            - connect:AssociateLambdaFunction
+            - connect:DisassociateLambdaFunction            
+            Resource: arn:aws:connect:*:${AWS::AccountID}:instance/*   
 
   LexConnectPermissionCustomResource:
     Type: 'AWS::Serverless::Function'
@@ -151,9 +151,9 @@ Resources:
           - Sid: Connect
             Effect: "Allow"
             Action: 
-            - "connect:AssociateLexBot"
-            - "connect:DisassociateLexBot"
-            Resource: "arn:aws:connect:*:${AWS::AccountID}:instance/*" 
+            - connect:AssociateLexBot
+            - connect:DisassociateLexBot
+            Resource: arn:aws:connect:*:${AWS::AccountID}:instance/* 
             
 Outputs:
   CFNIntentLex:
