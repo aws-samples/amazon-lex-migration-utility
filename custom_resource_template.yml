@@ -115,7 +115,7 @@ Resources:
             Effect: "Allow"
             Action: 
             - dynamodb:PutItem
-            Resource: !Sub "arn:aws:dynamodb:*:${AWS::AccountID}:table/*"   
+            Resource: !Sub "arn:aws:dynamodb:*:${AWS::AccountId}:table/*"   
             
   LambdaConnectPermissionCustomResource:
     Type: 'AWS::Serverless::Function'
