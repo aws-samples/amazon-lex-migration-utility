@@ -115,7 +115,7 @@ Resources:
             Effect: "Allow"
             Action: 
             - dynamodb:PutItem
-            Resource: "arn:aws:dynamodb:*:${AWS::AccountID}:table/*"   
+            Resource: !Sub "arn:aws:dynamodb:*:${AWS::AccountID}:table/*"   
             
   LambdaConnectPermissionCustomResource:
     Type: 'AWS::Serverless::Function'
@@ -134,7 +134,7 @@ Resources:
             Action: 
             - connect:AssociateLambdaFunction
             - connect:DisassociateLambdaFunction            
-            Resource: arn:aws:connect:*:${AWS::AccountID}:instance/*   
+            Resource: !Sub "arn:aws:connect:*:${AWS::AccountID}:instance/*"   
 
   LexConnectPermissionCustomResource:
     Type: 'AWS::Serverless::Function'
@@ -153,7 +153,7 @@ Resources:
             Action: 
             - connect:AssociateLexBot
             - connect:DisassociateLexBot
-            Resource: arn:aws:connect:*:${AWS::AccountID}:instance/* 
+            Resource: !Sub "arn:aws:connect:*:${AWS::AccountID}:instance/*"
             
 Outputs:
   CFNIntentLex:
