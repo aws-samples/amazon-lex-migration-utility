@@ -2,3 +2,5 @@
 .vscode/settings.json
 .DS_Store
 order-flowers-template.json
+.aws-sam/
+samconfig.toml
