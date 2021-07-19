@@ -51,9 +51,10 @@ sam deploy --template-file custom-resources-sam-template.yml  --stack-name lex-c
 
 #### Prerequisites
 
-##### Python 3.x
+##### Python 3.x and Node 12.x
 
-The Amazon Lex Migration Utility requires [Python 3.x](https://www.python.org/downloads/)
+The Amazon Lex Migration Utility requires [Python 3.x](https://www.python.org/downloads/) and [Node 12.x](https://nodejs.org/en/download/)
+
 
 ##### Configure the AWS CLI with a profile for the source account
 
@@ -99,4 +100,4 @@ The *lex exporter* scripts works around this by adding a [DependsOn](https://doc
 
 ## Acknowledgements
 
-The custom resources used by the Amazon Lex Migration Utility are slightly modified forks of work done by [Andrew Templeton](https://github.com/andrew-templeton)
+The Lex bot, intent, and slot custom resources used by the Amazon Lex Migration Utility are slightly modified forks of work done by [Andrew Templeton](https://github.com/andrew-templeton)
