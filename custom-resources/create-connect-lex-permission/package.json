@@ -1,15 +1,14 @@
 {
-  "name": "lex_intent",
+  "name": "dynamodb-item",
   "version": "1.0.0",
   "description": "",
-  "main": "index-intent.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cfn-lambda": "^5.1.0",
-    "retry": "^0.13.1"
+    "cfn-response-async": "^1.0.0"
   }
 }

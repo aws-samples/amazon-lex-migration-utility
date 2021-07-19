@@ -30,7 +30,7 @@ def show_help(short=True):
     if short:
         return command_line
     else:
-        with open("./exporter/example-configuration.json") as file:
+        with open("./lex_exporter/example-configuration.json") as file:
             config_example = file.read()
         return (command_line + "\n\n"
                                "Configuration file format \n"
@@ -51,7 +51,37 @@ def get_latest_intent(intent_name):
 def create_lex_bot_aliases(resource_type,
                            name_contains,
                            service_token,
-                           alias):
+                           alias,
+                           dependent_resources):
+    depends_on = list(dependent_resources)
+    paginator = client.get_paginator('get_bots')
+    marker = None
+    pages = paginator.paginate(nameContains=name_contains, PaginationConfig={
+        'MaxItems': 1000,
+        'PageSize': 10,
+        'StartingToken': marker
+    })
+    for page in pages:
+        for bot in page["bots"]:
+            bot_resource_name = re.sub(r'[\W_]+', '', bot["name"])
+            template["Resources"].update(
+                    {bot_resource_name + "Alias": {
+                        "Type": resource_type,
+                        "DependsOn": list(set(depends_on) - set([bot_resource_name + "Alias"])),
+                        "Properties": {
+                            "ServiceToken": {"Fn::ImportValue": service_token},
+                            "name": {"Fn::Sub": alias + "${ResourceSuffix}"},
+                            "botVersion": "$LATEST",
+                            "botName": bot["name"]
+                        }
+                    }})
+            depends_on.append(bot_resource_name + "Alias")
+
+
+def create_lex_bot_permissions(resource_type,
+                               name_contains,
+                               service_token,
+                               connect_instance_id):
     paginator = client.get_paginator('get_bots')
     marker = None
     pages = paginator.paginate(nameContains=name_contains, PaginationConfig={
@@ -64,14 +94,14 @@ def create_lex_bot_aliases(resource_type,
             print(bot)
             bot_resource_name = re.sub(r'[\W_]+', '', bot["name"])
             template["Resources"].update(
-                    {bot_resource_name + "Alias": {
+                    {bot_resource_name + "Permission": {
                         "Type": resource_type,
                         "DependsOn": [bot_resource_name],
                         "Properties": {
                             "ServiceToken": {"Fn::ImportValue": service_token},
-                            "name": alias,
-                            "botVersion": "$LATEST",
-                            "botName": bot["name"]
+                            "InstanceID": "!Ref ConnectInstanceId",
+                            "LexRegion": {"Ref": "AWS::Region"},
+                            "Name": bot["name"]
                         }
                     }})
 
@@ -111,7 +141,7 @@ def create_resource(resource_type,
             properties_to_add = list(map(lambda x: {x: type_definition[x]}, keys_to_add))
             template["Resources"][resource_name]["Properties"].update(reduce(lambda a, b: dict(a, **b), properties_to_add))
             if len(created_resources) != 0:
-                template["Resources"][resource_name]["DependsOn"] = list(set(dependent_resources) - set(created_resources))
+                template["Resources"][resource_name]["DependsOn"] = list(set(dependent_resources) - set([resource_name]))
             dependent_resources.append(resource_name)  # Hopefully prevents throttling by limiting the number of parallel requests
     return created_resources
 
@@ -139,7 +169,7 @@ else:
 print(sys.argv[2])
 with open(sys.argv[2], "r") as file:
     config = json.load(file)
-with open("./exporter/config_schema.json", "r") as file:
+with open("./lex_exporter/config_schema.json", "r") as file:
     schema = json.load(file)
 
 try:
@@ -152,7 +182,15 @@ except Exception:
 template = {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": config["Output"]["TemplateDescription"],
-    "Resources": {}
+    "Resources": {},
+    "Parameters": {
+        "ResourceSuffix": {
+            "Type": "String",
+            "Default": "",
+            "Description": "Optional suffix to add each resource"
+        }
+
+    }
 }
 
 
@@ -192,7 +230,18 @@ for prefixes in config["ResourceFilters"]["Bots"]:
     create_lex_bot_aliases("Custom::LexBotAlias",
                            prefixes,
                            "LexBotAliasCustomResource",
-                           alias)
+                           alias, bots)
+    if(config["Build"]["CreateConnectPermissions"]):
+        create_lex_bot_permissions("Custom::LexBotPermission",
+                                   prefixes,
+                                   "LexConnectPermissionCustomResource")
+        template["Paramters"] = {
+            "ConnectInstanceID": {
+                "Type": "String",
+                "AllowedValues": ".+",
+                "ConstraintDescription": "ConnectInstanceID is required"
+            }
+        }
     resources += bots
 
 for bot in bots:

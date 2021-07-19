@@ -15,7 +15,7 @@ The Lex Migration Utility consists of a Python script that exports Lex definitio
 ### Install AWS CloudFormation custom resources in the target account
 
 ``` bash
-sam build -t lex_custom_resource_template.yml  
+sam build -t custom_resource_template.yml  
 sam package --output-template-file custom-resources-sam-template.yml --resolve-s3
 sam deploy --template-file custom-resources-sam-template.yml  --stack-name lex-custom-resources --capabilities "CAPABILITY_NAMED_IAM"
 ```
@@ -72,7 +72,7 @@ pip install --requirements requirements.txt #installs dependencies.  This only n
 Then from the destination account:
 
 ```bash
-python3 ./exporter/create_lex_template.py --config-file <configuration file>  --profile <source account>
+python3 ./exporter/create_lex_template.py --config-file <configuration file>  [--profile <source account>]
 ```
 
 ### Deploy to the destination account
@@ -81,10 +81,21 @@ python3 ./exporter/create_lex_template.py --config-file <configuration file>  --
 sam deploy --template-file <utput template> --stack-name <stack name> --resolve-s3 --capabilities "CAPABILITY_NAMED_IAM"
 ```
 
+### Custom Resources created.
+
+Each custom resource wraps the corresponding API.  
+
+- [CFNBot](https://docs.aws.amazon.com/cli/latest/reference/lex-models/put-bot.html) - Creates an Amazon Lex Bot
+- [CFNIntentLex](https://docs.aws.amazon.com/cli/latest/reference/lex-models/put-intent.html) - Creates a Lex Intent
+- [CFNSlotLex](https://docs.aws.amazon.com/cli/latest/reference/lex-models/put-slot-type.html) - Creates a Lex Slot
+- [CFNBotLexAlias](https://docs.aws.amazon.com/cli/latest/reference/lex-models/put-bot-alias.html) - Creates a Lex Alias
+- [CFNConnectAssociateLex](https://docs.aws.amazon.com/cli/latest/reference/connect/associate-lex-bot.html) - Associates a Lex Bot to am Amazon Connect instance.
+
 ## Known Issues
 
 - Deleting a stack with custom Lex resources does not always delete cleanly. If the custom resource returns a "Conflict Exception". Keep trying to delete the stack.
-- Occasionally, some resources are not deleted successfully although CloudFormation will report success.
+The *lex exporter* scripts works around this by adding a [DependsOn](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-dependson.html) constraint to each resource to force CloudFormation to create and delete synchronously instead of in parallel.
+
 
 ## Acknowledgements
 

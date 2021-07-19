@@ -99,10 +99,43 @@ Resources:
             - lex:DeleteBotAlias
             Resource: "*"
             
+
+  LexConnectPermissionCustomResource:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: LexConnectPermissionCustomResource
+      Handler: index.handler
+      Runtime: nodejs12.x
+      CodeUri: ./custom-resources/create-connect-lex-permission
+      Description: 'custom cloudformation resource used to associate a Lex with a Connect instance'
+      MemorySize: 256
+      Timeout: 300
+      Policies:
+        - Statement: 
+          - Sid: Connect
+            Effect: "Allow"
+            Action: 
+            - lex:GetBots
+            - lex:GetBot
+            - lex:CreateResourcePolicy
+            - lex:DeleteResourcePolicy
+            - lex:UpdateResourcePolicy
+            - lex:DescribeBotAlias
+            - lex:ListBotAliases
+            - lex:ListBots
+            - connect:AssociateBot
+            - connect:DisassociateBot
+            - connect:ListBots
+            - connect:AssociateLexBot
+            - connect:DisassociateLexBot
+            - connect:ListLexBots
+            Resource: 
+            - !Sub "arn:aws:connect:*:${AWS::AccountId}:instance/*"
+            - !Sub "arn:aws:lambda:*:${AWS::AccountId}:function:*"
             
 Outputs:
   CFNIntentLex:
-    Description: Custom resource to deploy LexBots
+    Description: Custom resource to deploy intents
     Value:
       Fn::GetAtt:
       - LexIntentCustomResource
@@ -110,7 +143,7 @@ Outputs:
     Export:
       Name: LexIntentCustomResource
   CFNBotLex:
-    Description: Custom resource to deploy LexBots
+    Description: Custom resource to deploy Amazon Lex Bots
     Value:
       Fn::GetAtt:
       - LexBotCustomResource
@@ -118,7 +151,7 @@ Outputs:
     Export:
       Name: LexBotCustomResource
   CFNSlotLex:
-    Description: Custom resource to deploy LexBots
+    Description: Custom resource to deploy slots
     Value:
       Fn::GetAtt:
       - LexSlotCustomResource
@@ -126,10 +159,18 @@ Outputs:
     Export:
       Name: LexSlotCustomResource
   CFNBotLexAlias:
-    Description: Custom resource to deploy LexBots
+    Description: Custom resource to deploy Lex bot aliases
     Value:
       Fn::GetAtt:
       - LexAliasCustomResource
       - Arn
     Export:
       Name: LexBotAliasCustomResource
+  CFNLexConnectPermission:
+    Description: Custom resource to associate a lex bot to a connect instance
+    Value:
+      Fn::GetAtt:
+      - LexConnectPermissionCustomResource
+      - Arn
+    Export:
+      Name: LexConnectPermissionCustomResource
