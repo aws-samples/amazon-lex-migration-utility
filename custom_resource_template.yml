@@ -36,6 +36,7 @@ Resources:
             - lex:CreateIntent
             - lex:PutIntent
             - lex:DeleteBot
+            - lex:GetIntent
             - lex:PutBot
             Resource: "*"
   LexIntentCustomResource:
@@ -56,6 +57,7 @@ Resources:
             Action: 
             - lex:DeleteIntent
             - lex:CreateIntent
+            - lex:GetSlot
             - lex:PutIntent
             Resource: "*"
   LexSlotCustomResource:

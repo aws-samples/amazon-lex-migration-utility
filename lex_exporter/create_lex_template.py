@@ -148,6 +148,7 @@ def create_resource(resource_type,
 
 profile = None
 
+print("Creating template...")
 
 for i in range(len(sys.argv)):
     argv = sys.argv[i]
@@ -193,7 +194,7 @@ template = {
     }
 }
 
-
+print("Creating Amazon LexSlotTypes")
 paginator = client.get_paginator('get_slot_types')
 resources = []
 for prefixes in config["ResourceFilters"]["SlotTypes"]:
@@ -205,19 +206,24 @@ for prefixes in config["ResourceFilters"]["SlotTypes"]:
                                  prefixes,
                                  resources)
 
+print("Creating Lex Intents")
 paginator = client.get_paginator('get_intents')
+intents =[]
 for prefixes in config["ResourceFilters"]["Intents"]:
-    resources += create_resource("Custom::LexIntent",
+    intents += create_resource("Custom::LexIntent",
                                  paginator.paginate,
                                  partial(client.get_intent, version="$LATEST"),
                                  "intents",
                                  "LexIntentCustomResource",
                                  prefixes,
-                                 resources)
+                                 resources) 
+    resources += intents
 
-
+print("Creating LexBots")
 paginator = client.get_paginator('get_bots')
-alias = config["Build"]["LexAlias"]
+alias = config["Build"]["LexAlias"] if "Build" in config and "LexAlias" in config["Build"]["LexAlias"] else None
+should_create_lex_permission = config["Build"]["CreateConnectPermissions"] if "Build" in config and "CreateConnectPermissions" in config["Build"] else False
+
 for prefixes in config["ResourceFilters"]["Bots"]:
     bots = create_resource("Custom::LexBot",
                            paginator.paginate,
@@ -226,12 +232,13 @@ for prefixes in config["ResourceFilters"]["Bots"]:
                            "LexBotCustomResource",
                            prefixes,
                            resources)
-
-    create_lex_bot_aliases("Custom::LexBotAlias",
-                           prefixes,
-                           "LexBotAliasCustomResource",
-                           alias, bots)
-    if(config["Build"]["CreateConnectPermissions"]):
+    if(alias is not None):
+        create_lex_bot_aliases("Custom::LexBotAlias",
+                            prefixes,
+                            "LexBotAliasCustomResource",
+                            alias, bots)
+    
+    if(should_create_lex_permission):
         create_lex_bot_permissions("Custom::LexBotPermission",
                                    prefixes,
                                    "LexConnectPermissionCustomResource")
@@ -244,11 +251,18 @@ for prefixes in config["ResourceFilters"]["Bots"]:
         }
     resources += bots
 
+print("Updating versions")
 for bot in bots:
-    intents = template["Resources"][bot]["Properties"]["intents"]
-    for intent in intents:
-        intent["intentVersion"] = 1
+    bot_intents = template["Resources"][bot]["Properties"]["intents"]
+    for intent in bot_intents:
+        intent["intentVersion"] = "1"
 
+for intent in intents:
+    slots = template["Resources"][intent]["Properties"]["slots"]
+    for slot in slots:
+        slot["slotTypeVersion"] = "1"
 
 with open(os.path.join(sys.path[0], config["Output"]["Filename"]), 'w') as f:
     json.dump(template, f, indent=4, default=str)
+
+print("Template created " + config["Output"]["Filename"])
