@@ -80,8 +80,7 @@ def create_lex_bot_aliases(resource_type,
 
 def create_lex_bot_permissions(resource_type,
                                name_contains,
-                               service_token,
-                               connect_instance_id):
+                               service_token):
     paginator = client.get_paginator('get_bots')
     marker = None
     pages = paginator.paginate(nameContains=name_contains, PaginationConfig={
