@@ -1,10 +1,10 @@
 .vscode/spellright.dict
 .vscode/settings.json
 .DS_Store
-order-flowers-template.json
 .aws-sam/
 create-contact-flow-template/contact-flows.json
 .aws-sam
 custom-resources/create-connect-lambda-permission/node_modules
 sample-lambda.yml
 samconfig.toml
+custom-resources-sam-template.yml

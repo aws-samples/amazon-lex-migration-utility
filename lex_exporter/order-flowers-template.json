@@ -1,0 +1,252 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Creates resources needed for the OrderFlowers Sample ",
+    "Resources": {
+        "WebUiFlowerTypesLexSlotType": {
+            "Type": "Custom::LexSlotType",
+            "Properties": {
+                "ServiceToken": {
+                    "Fn::ImportValue": "LexSlotCustomResource"
+                },
+                "valueSelectionStrategy": "ORIGINAL_VALUE",
+                "enumerationValues": [
+                    {
+                        "value": "tulips"
+                    },
+                    {
+                        "value": "lilies"
+                    },
+                    {
+                        "value": "roses"
+                    }
+                ],
+                "name": "WebUiFlowerTypes",
+                "description": "Types of flowers to pick up",
+                "createVersion": true
+            },
+            "DependsOn": []
+        },
+        "WebUiOrderFlowersLexIntent": {
+            "Type": "Custom::LexIntent",
+            "Properties": {
+                "ServiceToken": {
+                    "Fn::ImportValue": "LexIntentCustomResource"
+                },
+                "conclusionStatement": {
+                    "messages": [
+                        {
+                            "contentType": "PlainText",
+                            "content": "Thanks for your order",
+                            "groupNumber": 1
+                        }
+                    ]
+                },
+                "fulfillmentActivity": {
+                    "type": "ReturnIntent"
+                },
+                "name": "WebUiOrderFlowers",
+                "confirmationPrompt": {
+                    "messages": [
+                        {
+                            "contentType": "PlainText",
+                            "content": "Okay, your {FlowerType} will be ready for pickup by {PickupTime} on {PickupDate}.  Does this sound okay?"
+                        },
+                        {
+                            "contentType": "PlainText",
+                            "content": "Okay, your {FlowerType} will be ready for pickup by {PickupTime} on {PickupDate}, and will cost [Price] dollars.  Does this sound okay?"
+                        }
+                    ],
+                    "maxAttempts": 2
+                },
+                "rejectionStatement": {
+                    "messages": [
+                        {
+                            "contentType": "PlainText",
+                            "content": "Okay, I will not place your order."
+                        }
+                    ]
+                },
+                "slots": [
+                    {
+                        "name": "PickupTime",
+                        "description": "The time to pick up the flowers",
+                        "slotConstraint": "Required",
+                        "slotType": "AMAZON.TIME",
+                        "valueElicitationPrompt": {
+                            "messages": [
+                                {
+                                    "contentType": "PlainText",
+                                    "content": "At what time do you want the {FlowerType} to be picked up?"
+                                },
+                                {
+                                    "contentType": "PlainText",
+                                    "content": "Pick up the {FlowerType} at what time on {PickupDate}?"
+                                }
+                            ],
+                            "maxAttempts": 2
+                        },
+                        "priority": 3,
+                        "sampleUtterances": [],
+                        "obfuscationSetting": "NONE",
+                        "slotTypeVersion": "1"
+                    },
+                    {
+                        "name": "FlowerType",
+                        "description": "The type of flowers to pick up",
+                        "slotConstraint": "Required",
+                        "slotType": "WebUiFlowerTypes",
+                        "slotTypeVersion": "1",
+                        "valueElicitationPrompt": {
+                            "messages": [
+                                {
+                                    "contentType": "PlainText",
+                                    "content": "What type of flowers would you like to order?"
+                                }
+                            ],
+                            "maxAttempts": 2,
+                            "responseCard": "{\"version\":1,\"contentType\":\"application/vnd.amazonaws.card.generic\",\"genericAttachments\":[{\"imageUrl\":\"https://s3.amazonaws.com/aws-bigdata-blog/artifacts/aws-lex-web-ui/artifacts/flowers.jpeg\",\"subTitle\":\"Pick a Flower Type\",\"title\":\"Flower Types\",\"buttons\":[{\"text\":\"Roses\",\"value\":\"roses\"},{\"text\":\"Lilies\",\"value\":\"lilies\"},{\"text\":\"Tulips\",\"value\":\"tulips\"}]}]}"
+                        },
+                        "priority": 1,
+                        "sampleUtterances": [
+                            "I would like to order {FlowerType}"
+                        ],
+                        "obfuscationSetting": "NONE"
+                    },
+                    {
+                        "name": "PickupDate",
+                        "description": "The date to pick up the flowers",
+                        "slotConstraint": "Required",
+                        "slotType": "AMAZON.DATE",
+                        "valueElicitationPrompt": {
+                            "messages": [
+                                {
+                                    "contentType": "PlainText",
+                                    "content": "What day do you want the {FlowerType} to be picked up?"
+                                },
+                                {
+                                    "contentType": "PlainText",
+                                    "content": "Pick up the {FlowerType} at {PickupTime} on what day?"
+                                }
+                            ],
+                            "maxAttempts": 2
+                        },
+                        "priority": 2,
+                        "sampleUtterances": [],
+                        "obfuscationSetting": "NONE",
+                        "slotTypeVersion": "1"
+                    }
+                ],
+                "description": "Intent to order a bouquet of flowers for pick up",
+                "createVersion": true,
+                "sampleUtterances": [
+                    "I would like to order some flowers",
+                    "I would like to buy some flowers",
+                    "I would like to pick up flowers",
+                    "I would like to order flowers",
+                    "I would like to buy flowers",
+                    "Can I please get flowers",
+                    "May I please get flowers",
+                    "I want to place an order",
+                    "I want to order flowers",
+                    "I want to buy flowers",
+                    "May I order flowers",
+                    "Can I order flowers",
+                    "Can I buy flowers",
+                    "Can I get flowers",
+                    "May I get flowers",
+                    "May I buy flowers",
+                    "I want to order",
+                    "I want flowers",
+                    "place an order",
+                    "I want to buy",
+                    "make an order",
+                    "order flowers",
+                    "buy flowers",
+                    "put an order",
+                    "can I order",
+                    "place order",
+                    "make order",
+                    "order",
+                    "buy"
+                ]
+            },
+            "DependsOn": [
+                "WebUiFlowerTypesLexSlotType"
+            ]
+        },
+        "WebUiOrderFlowersLexBot": {
+            "Type": "Custom::LexBot",
+            "Properties": {
+                "ServiceToken": {
+                    "Fn::ImportValue": "LexBotCustomResource"
+                },
+                "idleSessionTTLInSeconds": 600,
+                "detectSentiment": false,
+                "intents": [
+                    {
+                        "intentName": "WebUiOrderFlowers",
+                        "intentVersion": "1"
+                    }
+                ],
+                "enableModelImprovements": false,
+                "childDirected": false,
+                "voiceId": "Salli",
+                "name": "WebUiOrderFlowers",
+                "locale": "en-US",
+                "abortStatement": {
+                    "messages": [
+                        {
+                            "contentType": "PlainText",
+                            "content": "Sorry, I'm not able to assist at this time"
+                        }
+                    ]
+                },
+                "description": "Bot to order flowers on the behalf of a user",
+                "createVersion": true,
+                "clarificationPrompt": {
+                    "messages": [
+                        {
+                            "contentType": "PlainText",
+                            "content": "I didn't understand you, what would you like to do?"
+                        }
+                    ],
+                    "maxAttempts": 2
+                }
+            },
+            "DependsOn": [
+                "WebUiFlowerTypesLexSlotType",
+                "WebUiOrderFlowersLexIntent"
+            ]
+        },
+        "WebUiOrderFlowersPermission": {
+            "Type": "Custom::LexBotPermission",
+            "DependsOn": [
+                "WebUiOrderFlowers"
+            ],
+            "Properties": {
+                "ServiceToken": {
+                    "Fn::ImportValue": "LexConnectPermissionCustomResource"
+                },
+                "InstanceID": "!Ref ConnectInstanceId",
+                "LexRegion": {
+                    "Ref": "AWS::Region"
+                },
+                "Name": "WebUiOrderFlowers"
+            }
+        }
+    },
+    "Parameters": {
+        "ResourceSuffix": {
+            "Type": "String",
+            "Default": "",
+            "Description": "Optional suffix to add each resource"
+        }
+    },
+    "Paramters": {
+        "ConnectInstanceID": {
+            "Type": "String",
+            "AllowedValues": ".+",
+            "ConstraintDescription": "ConnectInstanceID is required"
+        }
+    }
+}
