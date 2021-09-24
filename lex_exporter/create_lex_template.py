@@ -16,11 +16,13 @@
 import boto3
 import jsonschema
 
+
 from functools import reduce, partial
 import re
 import json
 import sys
 import os
+from pydash import _
 
 # TODO: Handle version updates
 
@@ -90,7 +92,6 @@ def create_lex_bot_permissions(resource_type,
     })
     for page in pages:
         for bot in page["bots"]:
-            print(bot)
             bot_resource_name = re.sub(r'[\W_]+', '', bot["name"])
             template["Resources"].update(
                     {bot_resource_name + "Permission": {
@@ -118,14 +119,17 @@ def create_resource(resource_type,
         'PageSize': 10,
         'StartingToken': marker
     })
+    
 
+    suffix = resource_type.split("::")[1]
     created_resources = []
     for type in iterator:
         types = type[lex_type]
         for resource in types:
             type_definition = lex_get_details_function(name=resource["name"])
             type_definition["createVersion"] = True
-            resource_name = re.sub(r'[\W_]+', '', resource["name"])
+            resource_name = re.sub(r'[\W_]+', '', resource["name"])+suffix
+            print(f"Creating Resource "+ resource_name)
             created_resources.append(resource_name)
             template["Resources"].update(
                 {resource_name: {
@@ -146,7 +150,6 @@ def create_resource(resource_type,
 
 
 profile = None
-
 print("Creating template...")
 
 for i in range(len(sys.argv)):
@@ -193,10 +196,12 @@ template = {
     }
 }
 
+
 print("Creating Amazon LexSlotTypes")
 paginator = client.get_paginator('get_slot_types')
 resources = []
 for prefixes in config["ResourceFilters"]["SlotTypes"]:
+
     resources += create_resource("Custom::LexSlotType",
                                  paginator.paginate,
                                  partial(client.get_slot_type, version="$LATEST"),
@@ -252,16 +257,16 @@ for prefixes in config["ResourceFilters"]["Bots"]:
 
 print("Updating versions")
 for bot in bots:
-    bot_intents = template["Resources"][bot]["Properties"]["intents"]
+    bot_intents = _.get("template",f"Resources.{bot}.Properties.intents",[])
     for intent in bot_intents:
         intent["intentVersion"] = "1"
 
 for intent in intents:
-    slots = template["Resources"][intent]["Properties"]["slots"]
+    slots = template["Resources"][intent]["Properties"].get("slots",[])
     for slot in slots:
         slot["slotTypeVersion"] = "1"
 
-with open(os.path.join(sys.path[0], config["Output"]["Filename"]), 'w') as f:
+with open(os.path.join(config["Output"]["Filename"]), 'w') as f:
     json.dump(template, f, indent=4, default=str)
 
 print("Template created " + config["Output"]["Filename"])

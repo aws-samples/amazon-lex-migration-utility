@@ -6,9 +6,9 @@
     },
     "ResourceFilters":
     {
-        "SlotTypes":["FlowerType","PickupDate","PickupTime"],
-        "Intents":["OrderFlowers"],
-        "Bots":["OrderFlowers"]
+        "SlotTypes":["WebUi"],
+        "Intents":["WebUi"],
+        "Bots":["WebUi"]
     },
     "Output":{
         "Filename": "order-flowers-template.json",
