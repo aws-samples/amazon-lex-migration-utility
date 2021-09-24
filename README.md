@@ -93,7 +93,7 @@ Each custom resource wraps the corresponding API.
 
 ### Sample configuration file and template
 
-The sample configuration file and ```order-flowers-template.json``` corresponds to the Amazon Lex bots created when you install
+The sample configuration file and the ```order-flowers-template.json``` corresponds to the Amazon Lex bots created when you install
 [Lex Web UI](https://github.com/aws-samples/aws-lex-web-ui).  
 
 After installing Lex Web UI, you can export the LexBots by running:
