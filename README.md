@@ -1,5 +1,11 @@
 # Amazon Lex Migration Utility
 
+## Deprecation notice
+
+2022-03-28
+
+This project is no longer supported.  AWS has announced [Lex V2](https://docs.aws.amazon.com/lexv2/latest/dg/what-is.html) with a new set of APIs and new functionality. 
+
 ## Purpose
 
 The Amazon Lex Migration Utility allows you to easily migrate [Amazon Lex Chatbots](https://aws.amazon.com/lex/) between accounts.
